@@ -36,7 +36,7 @@ function getRescueStatus(hash){
 				config.successes = 1;
 			}
 			console.log('WON XP', res.data.rescue.xp_gain);
-			getDestroyer();
+			getProfile();
 		}
 	})
 }
@@ -74,7 +74,7 @@ function rescue(hash, number=0){
 	})
 }
 
-function getDestroyer(){
+function getDestroyer(current_risk){
 	var destroyers = ['sovereign', 'devastator', 'chimera', 'executrix'];
 	var destroyer = destroyers[Math.floor(Math.random() * destroyers.length)];
 	console.log(chalk.green('\tGetting Destroyer', destroyer));
@@ -100,13 +100,13 @@ function getDestroyer(){
 		console.log('\t Getting rescue....');
 
 		res.data.prisoners.sort(function(a,b){
-			return a.user.risk - b.user.risk;
+			return a.user.grade - b.user.grade;
 		});
 		for(p of res.data.prisoners){
-			if(p.user.risk === 0){
+			if(p.user.grade_id * 10 + current_risk > 60){
 				continue;
 			}
-			console.log(`Trying rescue with risk ${p.user.risk}`);
+			console.log(`Trying rescue with risk ${p.user.grade_id * 10}% and total risk ${p.user.grade_id * 10 + current_risk}`);
 			rescue(p.hash);
 		}
 	})
@@ -132,8 +132,7 @@ function getProfile(){
 		}
 		console.log('\tGot profile!');
 		console.log('\t Getting Destroyer.......');
-		console.log(res);
-		getDestroyer();
+		getDestroyer(res.user.risk);
 	});
 }
 
@@ -141,5 +140,5 @@ function getProfile(){
 	getProfile();
 	setInterval(function(){
 		getProfile();
-	}, 10 * 60 * 1000);
+	}, 5 * 60 * 1000);
 })();
