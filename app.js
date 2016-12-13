@@ -127,7 +127,7 @@ function getProfile(){
 		} catch(e) {
 			return console.error('Could not parse res', res);
 		}
-		if(parseInt(res.captured) === 1){
+		if(parseInt(res.user.captured) === 1){
 			return console.log('Captured, waiting...');
 		}
 		console.log('\tGot profile!');
@@ -136,9 +136,13 @@ function getProfile(){
 	});
 }
 
+function negociate(){
+	
+}
+
 (function launch(){
 	getProfile();
 	setInterval(function(){
 		getProfile();
-	}, 5 * 60 * 1000);
+	}, 2 * 60 * 1000);
 })();
