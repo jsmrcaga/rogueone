@@ -98,7 +98,17 @@ function getDestroyer(){
 		}
 		console.log('\t Got destroyer');
 		console.log('\t Getting rescue....');
-		rescue(res.data.prisoners[0].hash);
+
+		res.data.prisoners.sort(function(a,b){
+			return a.user.risk - b.user.risk;
+		});
+		for(p of res.data.prisoners){
+			if(p.user.risk === 0){
+				continue;
+			}
+			console.log(`Trying rescue with risk ${p.user.risk}`);
+			rescue(p.hash);
+		}
 	})
 }
 
@@ -122,6 +132,7 @@ function getProfile(){
 		}
 		console.log('\tGot profile!');
 		console.log('\t Getting Destroyer.......');
+		console.log(res);
 		getDestroyer();
 	});
 }
